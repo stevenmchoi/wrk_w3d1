@@ -1,0 +1,22 @@
+body {
+  font-family: "Arial, san-serif";
+  background-color: red;
+}
+h1 {
+  font-size: 38px;
+}
+h2 {
+  font-size: 32px;
+}
+ul .ingredients-list {
+  list-style: square inside;
+}
+ol {
+  list-style: upper-roman;
+}
+header > img {
+  width: 100px;
+}
+ul a {
+  text-decoration: none;
+}
