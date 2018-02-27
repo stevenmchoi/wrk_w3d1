@@ -60,7 +60,7 @@ def teachers_and_mobiles
   # #number or '07986 444 2266'
   execute(<<-SQL)
     SELECT
-      teachers.name, COALESCE(teachers.mobile)
+      teachers.name, COALESCE(teachers.mobile, '07986 444 2266')
     FROM
       teachers;
   SQL
@@ -71,6 +71,12 @@ def teachers_and_depts
   # department name. Use the string 'None' where there is no
   # department.
   execute(<<-SQL)
+    SELECT
+      teachers.name, COALESCE(depts.name, 'None')
+    FROM
+      teachers
+    LEFT JOIN
+      depts ON depts.id = teachers.dept_id;
   SQL
 end
 
@@ -79,6 +85,11 @@ def num_teachers_and_mobiles
   # mobile phones.
   # NB: COUNT only counts non-NULL values.
   execute(<<-SQL)
+    SELECT
+      COUNT(teachers.name) AS num_teachers,
+      COUNT(teachers.mobile) AS num_mobiles
+    FROM
+      teachers;
   SQL
 end
 
@@ -87,6 +98,14 @@ def dept_staff_counts
   # the number of staff. Structure your JOIN to ensure that the
   # Engineering department is listed.
   execute(<<-SQL)
+    SELECT
+      depts.name, COUNT(teachers.name) AS num_teachers
+    FROM
+      depts
+    LEFT JOIN
+      teachers ON teachers.dept_id = depts.id
+    GROUP BY
+      depts.name;
   SQL
 end
 
