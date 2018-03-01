@@ -230,40 +230,25 @@ def craiglockhart_to_sighthill
   # Sighthill. Show the bus no. and company for the first bus, the name of the
   # stop for the transfer, and the bus no. and company for the second bus.
   execute(<<-SQL)
-    SELECT
-      s1.name AS s1_name,
-      r2.*,
-      s2.name AS s2_name,
-      r3.*,
-      s3.name AS s3_name
+    SELECT DISTINCT
+      b.num,
+      b.company,
+      stopa.name,
+      d.num,
+      d.company
     FROM
-      routes r1
+      routes a
     FULL JOIN
-      stops s1
-    ON r1.stop_id = s1.id
+      routes b ON (a.company = b.company AND a.num = b.num)
     FULL JOIN
-      routes r2
-    ON r1.company = r2.company AND r1.num = r2.num
+      stops stopa ON (b.stop_id = stopa.id)
     FULL JOIN
-      stops s2
-    ON r2.stop_id = s2.id
+      routes c ON (stopa.id = c.stop_id)
     FULL JOIN
-      routes r3
-    ON r2.company = r3.company AND r2.num = r3.num
+      routes d ON (c.company = d.company AND c.num = d.num)
     FULL JOIN
-      stops s3
-    ON r3.stop_id = s3.id
+      stops stopb ON (d.stop_id = stopb.id)
     WHERE
-      s1.name = 'Craiglockhart';
-    -- JOIN
-    --   stops stopa ON (a.stop_id = stopa.id)
-    -- JOIN
-    --   stops stopb ON (b.stop_id = stopb.id)
-    -- JOIN
-    --   routes c ON (b.company = c.company AND b.num = c.num)
-    -- JOIN
-    --   stops stopc ON (c.stop_id = stopc.id);
-    -- WHERE
-    --   stopa.name = 'Craiglockhart' AND stopc.name = 'Sighthill';
+      a.stop_id = 53 AND d.stop_id = 213;
   SQL
 end
